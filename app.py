@@ -10,7 +10,7 @@ from models.RNG import RandomNumberGenerator, RNGS
 
 from flask import Flask
 
-DATABASE_URL = os.environ['DATABASE_URL']
+DATABASE_URL = os.environ['POSTGRESQL_DATABASE_URL']
 
 app = Flask(__name__)
 engine = db.create_engine(DATABASE_URL)
@@ -18,6 +18,7 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 API_VERSION_V1 = 'v1'
+
 
 @app.route("/" + API_VERSION_V1 + "/random/generate/percentage/")
 def error():
