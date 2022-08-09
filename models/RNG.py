@@ -26,8 +26,8 @@ class RandomNumberGenerator:
 class RNGS:
     __tablename__ = 'RNGS'
 
-    id = Column(Integer, primary_key=True, auto_increment=True, nullable=False)
-    uuid = Column(String, primary_key=True, auto_increment=False, nullable=False)
+    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    uuid = Column(String, primary_key=True, autoincrement=False, nullable=False)
     time_created = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     time_updated = Column(DateTime(timezone=True), onupdate=func.now(), nullable=False)
     rng_json = Column(String, nullable=False)
