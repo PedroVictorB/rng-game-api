@@ -25,12 +25,12 @@ class RandomNumberGenerator:
         return json.dumps(self.__dict__)
 
 
-@app.route("/" + API_VERSION_V1 + "/random/percentage/")
+@app.route("/" + API_VERSION_V1 + "/random/generate/percentage/")
 def error():
     return '{"error": "Chance is empty. Usage: /random/percentage/50.5"}'
 
 
-@app.route("/" + API_VERSION_V1 + "/random/percentage/<chance>")
+@app.route("/" + API_VERSION_V1 + "/random/generate/percentage/<chance>")
 def index(chance: str):
 
     if chance is None or chance == "":
