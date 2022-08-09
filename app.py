@@ -1,29 +1,23 @@
+import os
 import random
 from decimal import Decimal
 from uuid import uuid4
-import json
+
+import sqlalchemy as db
+from sqlalchemy.orm import sessionmaker
+
+from models.RNG import RandomNumberGenerator, RNGS
 
 from flask import Flask
 
+DATABASE_URL = os.environ['DATABASE_URL']
+
 app = Flask(__name__)
+engine = db.create_engine(DATABASE_URL)
+Session = sessionmaker(bind=engine)
+session = Session()
 
 API_VERSION_V1 = 'v1'
-
-
-class RandomNumberGenerator:
-
-    def __init__(self, chance, total_numbers, winner_numbers_list, winner_number, won):
-        self.uuid = str(uuid4())
-        self.chance = chance
-        self.chance_readable = str(chance) + "%"
-        self.total_numbers = total_numbers
-        self.winner_numbers_list = winner_numbers_list
-        self.winner_number = winner_number
-        self.won = won
-
-    def to_json(self):
-        return json.dumps(self.__dict__)
-
 
 @app.route("/" + API_VERSION_V1 + "/random/generate/percentage/")
 def error():
@@ -51,7 +45,14 @@ def index(chance: str):
     app.logger.debug("Winner number: " + str(winner_number))
     won = winner_number in winner_numbers
 
-    return RandomNumberGenerator(c, len(number_list), winner_numbers, winner_number, won).to_json()
+    uuid = uuid4()
+    rngs = RNGS()
+    rngs.uuid = uuid
+    rngs.rng_json = RandomNumberGenerator(str(uuid), c, len(number_list), winner_numbers, winner_number, won).to_json()
+
+    session.add(rngs)
+
+    return RandomNumberGenerator(str(uuid4()), c, len(number_list), winner_numbers, winner_number, won).to_json()
 
 
 def get_exponential_number(chance: float, is_whole: bool):
